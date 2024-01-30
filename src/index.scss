@@ -1,0 +1,28 @@
+@import url('https://fonts.googleapis.com/css2?family=Blinker:wght@200;400;600;700&display=swap');
+
+* {
+	box-sizing: border-box;
+	margin: 0;
+	padding: 0;
+	scroll-behavior: smooth;
+}
+
+body {
+	font-family: 'Blinker', sans-serif;
+}
+
+html {
+	font-size: 62.5%;
+}
+
+#root {
+	display: flex;
+	flex-direction: column;
+	min-height: 100vh;
+}
+
+.container {
+	max-width: 120rem;
+	margin: 0 auto;
+	padding: 0 1.9rem;
+}

@@ -1,0 +1,13 @@
+@import './breakpoints-map';
+
+@mixin breakpoint($breakpoint: large) {
+	$width: map-get($breakpoints-map, $breakpoint);
+
+	@if $width > 0 {
+		@media screen and (min-width: $width) {
+			@content;
+		}
+	} @else {
+		@content;
+	}
+}

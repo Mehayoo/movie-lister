@@ -1,0 +1,25 @@
+@import '../../../assets/styles/variables.scss';
+
+#{$Footer} {
+	background: $color-black;
+	color: white;
+	display: flex;
+	flex-direction: column;
+	font-size: 1.7rem;
+	height: 17rem;
+	justify-content: center;
+	text-align: center;
+
+	@media (max-width: 600px) {
+		height: 8rem;
+	}
+
+	a {
+		color: white;
+		text-decoration: underline;
+	}
+
+	a:hover {
+		color: red;
+	}
+}

@@ -1,0 +1,9 @@
+@import '../../../assets/styles/variables.scss';
+
+#{$AboutPage} {
+	font-size: 1.9rem;
+
+	&__copyright {
+		margin-top: 2rem;
+	}
+}

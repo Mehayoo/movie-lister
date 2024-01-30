@@ -1,26 +1,39 @@
-import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import { useEffect } from 'react'
+import { BrowserRouter, Route, Routes } from 'react-router-dom'
+import { useAppDispatch } from './redux/store'
+import { doLogin } from './redux/reducers/auth/actionCreators'
+import { useAuthState } from './redux/reducers/auth/selectors'
+import { routes, RouteType } from './routes'
+import { Footer, Navbar } from './components'
+import './App.scss'
 
 function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
+	const dispatch = useAppDispatch()
+	const { isLoggedIn } = useAuthState()
+
+	useEffect(() => {
+		if (!isLoggedIn && !window.location.search.includes('request_token')) {
+			dispatch(doLogin())
+		}
+	}, [isLoggedIn, dispatch])
+
+	return (
+		<BrowserRouter>
+			<Navbar />
+			<div className="content-wrap">
+				<Routes>
+					{routes.map((route: RouteType) => (
+						<Route
+							element={route.element()}
+							key={route.name}
+							path={route.path}
+						/>
+					))}
+				</Routes>
+			</div>
+			<Footer />
+		</BrowserRouter>
+	)
 }
 
-export default App;
+export default App
