@@ -5,13 +5,14 @@ import {
 	PayloadAction,
 } from '@reduxjs/toolkit'
 import {
-	toggleFavorite,
+	getCategories,
 	getFavorites,
 	getMovies,
-	getCategories,
+	toggleFavorite,
+	searchMovies,
 } from './actionCreators'
 import {
-	SyncFavoritesParams,
+	ContextEnum,
 	GetCategoriesResponse,
 	GetMoviesParams,
 	Movie,
@@ -19,6 +20,7 @@ import {
 	MovieResult,
 	RequestMoviesResponse,
 	RequestStatus,
+	SyncFavoritesParams,
 	TmdbResponse,
 	ToggleFavorites,
 } from '../../../constants'
@@ -36,12 +38,19 @@ export interface MoviesState {
 	getFavoriteMoviesStatus: RequestStatus
 	toggleFavoriteRequestStatus: RequestStatus
 
-	currentCategoryId: number
+	currentCategoryId: number | undefined
 	categories: GetCategoriesResponse
 	getCategoriesRequestStatus: RequestStatus
 
 	categoryMovies: MovieResult
 	categoryMovieIds: number[]
+
+	searchResults: MovieResult
+	searchResultIds: number[]
+	searchQuery: string
+	getSearchResultsRequestStatus: RequestStatus
+	pathContext: string
+	isSearching: boolean
 }
 
 const initialState: MoviesState = {
@@ -68,7 +77,7 @@ const initialState: MoviesState = {
 	getFavoriteMoviesStatus: RequestStatus.PENDING,
 	toggleFavoriteRequestStatus: RequestStatus.PENDING,
 
-	currentCategoryId: 0,
+	currentCategoryId: undefined,
 	categories: {} as GetCategoriesResponse,
 	getCategoriesRequestStatus: RequestStatus.PENDING,
 
@@ -79,6 +88,18 @@ const initialState: MoviesState = {
 		total_results: 0,
 	},
 	categoryMovieIds: [],
+
+	searchResults: {
+		results: {} as MovieLookup,
+		page: 1,
+		total_pages: 0,
+		total_results: 0,
+	},
+	searchResultIds: [],
+	searchQuery: '',
+	getSearchResultsRequestStatus: RequestStatus.PENDING,
+	pathContext: ContextEnum.ALL,
+	isSearching: false,
 }
 
 const slice = createSlice({
@@ -103,12 +124,35 @@ const slice = createSlice({
 			state.favoriteMoviesPage = favoriteMoviesPage
 			state.favoriteMoviesTotalPages = favoriteMoviesTotalPages
 		},
-		// TO-DO: Deceide if remove or not
 		setCurrentCategoryId: (
 			state: Draft<MoviesState>,
-			action: PayloadAction<number>
+			action: PayloadAction<number | undefined>
 		): void => {
 			state.currentCategoryId = action.payload
+		},
+		setSearchQuery: (
+			state: Draft<MoviesState>,
+			action: PayloadAction<string>
+		): void => {
+			state.searchQuery = action.payload
+		},
+		resetSearch: (state: Draft<MoviesState>): void => {
+			state.searchResults = {
+				results: {},
+				page: 1,
+				total_pages: 0,
+				total_results: 0,
+			}
+			state.searchResultIds = []
+			state.searchQuery = ''
+			state.getSearchResultsRequestStatus = RequestStatus.PENDING
+			state.isSearching = false
+		},
+		setPathContext: (
+			state: Draft<MoviesState>,
+			action: PayloadAction<string>
+		): void => {
+			state.pathContext = action.payload
 		},
 	},
 	extraReducers: (builder: ActionReducerMapBuilder<MoviesState>): void => {
@@ -170,6 +214,7 @@ const slice = createSlice({
 					}
 				}
 			)
+
 			.addCase(
 				getFavorites.pending,
 				(state: Draft<MoviesState>): void => {
@@ -208,6 +253,7 @@ const slice = createSlice({
 					state.favoriteMovies.total_results = total_results
 				}
 			)
+
 			.addCase(
 				toggleFavorite.pending,
 				(state: Draft<MoviesState>): void => {
@@ -263,6 +309,7 @@ const slice = createSlice({
 					state.favoriteMovieIds = Array.from(favoriteMovieIdsSet)
 				}
 			)
+
 			.addCase(
 				getCategories.pending,
 				(state: Draft<MoviesState>): void => {
@@ -285,8 +332,52 @@ const slice = createSlice({
 					state.categories = action.payload
 				}
 			)
+
+			.addCase(
+				searchMovies.pending,
+				(state: Draft<MoviesState>): void => {
+					state.getSearchResultsRequestStatus = RequestStatus.PENDING
+				}
+			)
+			.addCase(
+				searchMovies.rejected,
+				(state: Draft<MoviesState>): void => {
+					state.getSearchResultsRequestStatus = RequestStatus.ERROR
+				}
+			)
+			.addCase(
+				searchMovies.fulfilled,
+				(
+					state: Draft<MoviesState>,
+					action: PayloadAction<
+						RequestMoviesResponse,
+						string,
+						{ arg: GetMoviesParams }
+					>
+				): void => {
+					const { page, results, total_pages, total_results } =
+						action.payload
+
+					state.getSearchResultsRequestStatus = RequestStatus.SUCCESS
+
+					results.forEach((movie: Movie) => {
+						state.searchResultIds.push(movie.id)
+						state.searchResults.results[movie.id] = movie
+					})
+
+					state.searchResults.page = page
+					state.searchResults.total_pages = total_pages
+					state.searchResults.total_results = total_results
+				}
+			)
 	},
 })
 
-export const { setSyncFavoritesParams, setCurrentCategoryId } = slice.actions
+export const {
+	setSyncFavoritesParams,
+	setCurrentCategoryId,
+	setSearchQuery,
+	resetSearch,
+	setPathContext,
+} = slice.actions
 export default slice.reducer

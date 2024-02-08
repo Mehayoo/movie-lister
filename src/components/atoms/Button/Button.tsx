@@ -1,10 +1,28 @@
+import { ButtonProps } from './types'
 import cn from '../../../utils/classNames'
 
 import './style.scss'
 const bem = cn('button')
 
-const Button = () => {
-	return <button className={bem('')}>Back</button>
+const Button = ({
+	children,
+	className,
+	headIcon,
+	label,
+	onClick,
+	tailIcon,
+}: ButtonProps) => {
+	const classNames = [bem(''), className].join(' ').trim()
+
+	return (
+		<button className={classNames} onClick={onClick} type="button">
+			{headIcon && <i className={bem('icon-container')}>{headIcon}</i>}
+
+			{label || children}
+
+			{tailIcon && <i className={bem('icon-container')}>{tailIcon}</i>}
+		</button>
+	)
 }
 
 export default Button

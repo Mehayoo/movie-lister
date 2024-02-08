@@ -66,10 +66,10 @@
 import React from 'react'
 import { Link } from 'react-router-dom'
 import { IconHeartPlus } from '@tabler/icons-react'
+import { Button } from '../../'
 import { RootState, useAppDispatch, useAppSelector } from '../../../redux/store'
 import { toggleFavorite } from '../../../redux/reducers/movies/actionCreators'
 import useLazyLoad from '../../../hooks/useLazyLoad'
-
 import { MovieItemProps } from './types'
 import cn from '../../../utils/classNames'
 
@@ -91,14 +91,12 @@ const MovieItem = ({
 		(state: RootState) => state.authReducer.sessionToken
 	)
 
-	const addMovieToFavorites = (
-		event: React.MouseEvent<HTMLElement>
-	): void => {
-		event.preventDefault()
-		event.stopPropagation()
+	const addMovieToFavorites = (event?: React.MouseEvent<Element>): void => {
+		event?.preventDefault()
+		event?.stopPropagation()
 
 		if (!sessionToken) {
-			console.log('User is not logged in')
+			console.error('User is not logged in')
 			return
 		}
 
@@ -121,15 +119,19 @@ const MovieItem = ({
 				<p>{original_title}</p>
 				<div className={bem('details')}>
 					<p className={bem('release')}>{release_date}</p>
-					<i
-						className={bem('favorite', { filled: favorite })}
+
+					<Button
 						onClick={addMovieToFavorites}
-					>
-						<IconHeartPlus
-							aria-label="Add to favorites"
-							size={35}
-						/>
-					</i>
+						headIcon={
+							<IconHeartPlus
+								aria-label="Add to favorites"
+								className={bem('favorite', {
+									filled: favorite,
+								})}
+								size={35}
+							/>
+						}
+					/>
 				</div>
 			</div>
 		</Link>

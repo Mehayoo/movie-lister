@@ -6,6 +6,7 @@ import {
 	FavoritesPage,
 	MovieDetails,
 	MoviesPage,
+	SearchResults,
 	TmdbAuthHandler,
 } from './components'
 
@@ -50,5 +51,10 @@ export const routes: RouteType[] = [
 		element: () => <AboutPage />,
 		name: 'about-page',
 		path: '/about',
+	},
+	{
+		element: () => <SearchResults />,
+		name: 'search-results-page',
+		path: '/search-results',
 	},
 ]

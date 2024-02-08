@@ -5,9 +5,9 @@ import {
 	useLocation,
 	useNavigate,
 } from 'react-router-dom'
+import { Grid, Skeleton } from '../..'
 import { useAppDispatch } from '../../../redux/store'
 import { completeLogin } from '../../../redux/reducers/auth/actionCreators/completeLogin'
-import { Grid, Skeleton } from '../..'
 
 const TmdbAuthHandler = () => {
 	const dispatch = useAppDispatch()

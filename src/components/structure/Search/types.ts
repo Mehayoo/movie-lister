@@ -1,3 +1,3 @@
 export interface SearchProps {
-	readonly searchOpen?: boolean
+	readonly className?: string
 }

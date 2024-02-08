@@ -1,0 +1,10 @@
+@import '../../../assets/styles/variables.scss';
+
+#{$SearchResultsPage} {
+	&__total-results {
+		display: flex;
+		font-size: 1.9rem;
+		justify-content: center;
+		margin-bottom: 3rem;
+	}
+}

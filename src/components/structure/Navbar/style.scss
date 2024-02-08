@@ -1,90 +1,8 @@
 @import '../../../assets/styles/variables.scss';
 
-// #{$Navbar} {
-// 	-webkit-box-shadow: 0 0.4rem 0.5rem -0.5rem rgba($color-black, 0.23);
-// 	-moz-box-shadow: 0 0.4rem 0.5rem -0.5rem rgba($color-black, 0.23);
-// 	background: white;
-// 	box-shadow: 0 0.4rem 0.5rem -0.5rem rgba($color-black, 0.23);
-// 	position: fixed;
-// 	top: 0;
-// 	width: 100%;
-// 	z-index: 50;
-
-// 	&__container {
-// 		align-items: center;
-// 		display: flex;
-// 		height: 12rem;
-// 		justify-content: space-between;
-// 		transition: height 0.1s linear;
-
-// 		&--sticky {
-// 			height: 8rem;
-// 		}
-// 	}
-
-// 	&__logo {
-// 		cursor: pointer;
-// 		height: 6.5rem;
-// 		width: 6.5rem;
-
-// 		@include breakpoint(medium) {
-// 			height: 8rem;
-// 			width: 8rem;
-// 		}
-// 	}
-
-// 	&__dropdown {
-// 		position: relative;
-
-// 		&:hover #{$Categories} {
-// 			display: block;
-// 		}
-// 	}
-
-// 	&__links {
-// 		display: none;
-// 		font-size: 1.8rem;
-// 		gap: 2.5rem;
-// 		text-transform: uppercase;
-
-// 		@include breakpoint(medium) {
-// 			display: flex;
-// 		}
-// 	}
-
-// 	&__link {
-// 		color: $color-black;
-// 		text-decoration: none;
-
-// 		&:hover {
-// 			text-decoration: underline;
-// 		}
-
-// 		&--selected {
-// 			color: $primary-color;
-// 			text-decoration: underline;
-// 		}
-// 	}
-
-// 	&__menu-container {
-// 		cursor: pointer;
-// 		display: flex;
-// 		font-size: 2.3rem;
-// 		gap: 1rem;
-
-// 		@include breakpoint(small) {
-// 			gap: 2.3rem;
-// 		}
-
-// 		@include breakpoint(medium) {
-// 			display: none;
-// 		}
-// 	}
-// }
-
 #{$Navbar} {
-	-webkit-box-shadow: 0 0.4rem 0.5rem -0.5rem rgba($color-black, 0.23);
 	-moz-box-shadow: 0 0.4rem 0.5rem -0.5rem rgba($color-black, 0.23);
+	-webkit-box-shadow: 0 0.4rem 0.5rem -0.5rem rgba($color-black, 0.23);
 	background: white;
 	box-shadow: 0 0.4rem 0.5rem -0.5rem rgba($color-black, 0.23);
 	position: fixed;
@@ -106,12 +24,23 @@
 
 	&__logo {
 		cursor: pointer;
-		height: 8rem;
-		width: 8rem;
+		margin-right: 1rem;
 
+		img {
+			display: block;
+			height: 8rem;
+			width: 8rem;
+
+			@media (max-width: 600px) {
+				height: 6.5rem;
+				width: 6.5rem;
+			}
+		}
+	}
+
+	&__hide-search-for-mobile {
 		@media (max-width: 600px) {
-			height: 6.5rem;
-			width: 6.5rem;
+			display: none !important;
 		}
 	}
 
@@ -149,13 +78,25 @@
 	}
 
 	&__menu-container {
+		align-items: center;
 		cursor: pointer;
 		display: none;
 		font-size: 2.3rem;
-		gap: 3rem;
+		gap: 2.5rem;
+		justify-content: flex-end;
+		width: 80%;
 
 		@media (max-width: 600px) {
 			display: flex;
 		}
+
+		@media (max-width: 430px) {
+			display: flex;
+			gap: 1rem;
+		}
+	}
+
+	&__hamburger-menu {
+		z-index: 2;
 	}
 }

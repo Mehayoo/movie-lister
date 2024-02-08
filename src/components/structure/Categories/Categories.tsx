@@ -1,6 +1,7 @@
 import { Link, useLocation } from 'react-router-dom'
 import { useAppDispatch } from '../../../redux/store'
 import { getMovies } from '../../../redux/reducers/movies/actionCreators'
+import { setCurrentCategoryId } from '../../../redux/reducers/movies/slice'
 import { useMovieState } from '../../../redux/reducers/movies/selectors'
 import { CategoriesProps } from './types'
 import { RequestStatus } from '../../../constants'
@@ -10,7 +11,7 @@ import './style.scss'
 const bem = cn('categories')
 
 const Categories = ({ categories, className, toggleMenu }: CategoriesProps) => {
-	const classNames = [bem(''), className].join(' ').trim()
+	const classNames: string = [bem(''), className].join(' ').trim()
 	const location = useLocation()
 
 	const dispatch = useAppDispatch()
@@ -19,6 +20,7 @@ const Categories = ({ categories, className, toggleMenu }: CategoriesProps) => {
 	const onAllClick = (): void => {
 		toggleMenu && toggleMenu()
 		window.scrollTo(0, 0)
+		dispatch(setCurrentCategoryId(undefined))
 	}
 
 	const onCategoryClick = (id: number): void => {

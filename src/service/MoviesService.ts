@@ -56,7 +56,7 @@ class MoviesService {
 		} catch (error) {
 			return handleError({
 				error,
-				defaultMsg: 'Error getting list of movies',
+				defaultMsg: 'Error getting list of favorite movies',
 			})
 		}
 	}
@@ -88,6 +88,36 @@ class MoviesService {
 			return handleError({
 				error,
 				defaultMsg: 'Error adding movie to favorites',
+			})
+		}
+	}
+
+	public async searchMovies(
+		params: GetMoviesParams
+	): Promise<RequestMoviesResponse> {
+		const { categoryId, page, query } = params
+
+		try {
+			const response = await axios.get<RequestMoviesResponse>(
+				`${process.env.REACT_APP_API_BASE_URL}/search/movie`,
+				{
+					params: {
+						api_key: process.env.REACT_APP_API_KEY,
+						page,
+						query,
+						...(categoryId && { with_genres: categoryId }),
+					},
+					headers: {
+						Accept: 'application/json',
+						Authorization: `Bearer ${process.env.REACT_APP_API_READ_ACCESS_TOKEN}`,
+					},
+				}
+			)
+			return response.data
+		} catch (error) {
+			return handleError({
+				error,
+				defaultMsg: 'Error getting list of movies',
 			})
 		}
 	}

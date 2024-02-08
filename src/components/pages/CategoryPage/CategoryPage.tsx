@@ -1,8 +1,8 @@
 import { ReactElement, useEffect, useMemo } from 'react'
+import { Grid, MovieItem, Skeleton } from '../..'
 import { useAppDispatch } from '../../../redux/store'
 import { getMovies } from '../../../redux/reducers/movies/actionCreators'
 import { useMovieState } from '../../../redux/reducers/movies/selectors'
-import { Grid, MovieItem, Skeleton } from '../..'
 import useDetectScrolledToBottom from '../../../hooks/useDetectScrolledToBottom'
 import { RequestStatus } from '../../../constants'
 
@@ -62,7 +62,7 @@ const CategoryPage = () => {
 	}
 
 	if (getMoviesRequestStatus === RequestStatus.ERROR) {
-		console.log('Treat error case')
+		console.error('Treat error case')
 	}
 
 	return <Grid>{movieItems}</Grid>

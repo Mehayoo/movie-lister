@@ -64,29 +64,16 @@
 
 		&:hover {
 			color: $primary-color;
-		}
-
-		svg {
-			&:hover {
-				fill: $primary-color;
-			}
+			fill: $primary-color;
 		}
 
 		&--filled {
 			color: $primary-color;
-
-			svg {
-				fill: $primary-color;
-			}
+			fill: $primary-color;
 
 			&:hover {
 				color: none;
-			}
-
-			svg {
-				&:hover {
-					fill: none;
-				}
+				fill: none;
 			}
 		}
 	}

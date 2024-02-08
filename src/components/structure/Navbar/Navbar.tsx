@@ -1,10 +1,10 @@
 import { useEffect, useState } from 'react'
 import { Link, useLocation } from 'react-router-dom'
-import { IconMenu2, IconSearch } from '@tabler/icons-react'
+import { IconMenu2 } from '@tabler/icons-react'
+import { Button, Categories, Menu, Search } from '../../'
 import { useAppDispatch } from '../../../redux/store'
 import { getCategories } from '../../../redux/reducers/movies/actionCreators'
 import { useMovieState } from '../../../redux/reducers/movies/selectors'
-import { Categories, Menu, Search } from '../../'
 import LogoImg1 from '../../../assets/images/logo1.png'
 import cn from '../../../utils/classNames'
 
@@ -18,7 +18,6 @@ const Navbar = () => {
 
 	const [menuOpen, setMenuOpen] = useState<boolean>(false)
 	const [sticky, setSticky] = useState<boolean>(false)
-	const [searchOpen, setSearchOpen] = useState<boolean>(false)
 
 	const handleScroll = (): void => {
 		setSticky((prevSticky: boolean) => {
@@ -41,22 +40,20 @@ const Navbar = () => {
 
 	const toggleMenu = (): void => setMenuOpen(!menuOpen)
 
-	const toggleSearch = (): void => setSearchOpen(!searchOpen)
-
 	const onLinkClick = (): void => window.scrollTo(0, 0)
 
 	return (
 		<nav className={bem('')}>
 			<div className="container">
 				<div className={bem('container', { sticky })}>
-					<Link onClick={onLinkClick} to="/movies">
-						<img
-							alt="movie-lister-logo"
-							className={bem('logo')}
-							src={LogoImg1}
-						/>
+					<Link
+						className={bem('logo')}
+						onClick={onLinkClick}
+						to="/movies"
+					>
+						<img alt="movie-lister-logo" src={LogoImg1} />
 					</Link>
-					<Search searchOpen={searchOpen} />
+					<Search className={bem('hide-search-for-mobile')} />
 					<div className={bem('links')}>
 						<div className={bem('dropdown')}>
 							<Link
@@ -91,12 +88,13 @@ const Navbar = () => {
 						</Link>
 					</div>
 					<div className={bem('menu-container')}>
-						<i onClick={toggleSearch}>
-							<IconSearch aria-label="Open search" />
-						</i>
-						<i onClick={toggleMenu}>
-							<IconMenu2 aria-label="Open menu" />
-						</i>
+						<Search />
+
+						<Button
+							className={bem('hamburger-menu')}
+							onClick={toggleMenu}
+							headIcon={<IconMenu2 aria-label="Open menu" />}
+						/>
 					</div>
 
 					<Menu

@@ -1,9 +1,9 @@
 import { ReactElement, useEffect, useMemo } from 'react'
-import { useAppDispatch } from '../../../redux/store'
-import { getMovies } from '../../../redux/reducers/movies/actionCreators'
-import { useAuthState } from '../../../redux/reducers/auth/selectors'
-import { useMovieState } from '../../../redux/reducers/movies/selectors'
 import { Grid, MovieItem, Skeleton } from '../..'
+import { useAppDispatch } from '../../../redux/store'
+import { useAuthState } from '../../../redux/reducers/auth/selectors'
+import { getMovies } from '../../../redux/reducers/movies/actionCreators'
+import { useMovieState } from '../../../redux/reducers/movies/selectors'
 import useDetectScrolledToBottom from '../../../hooks/useDetectScrolledToBottom'
 import { RequestStatus } from '../../../constants'
 
@@ -64,7 +64,7 @@ const MoviesPage = () => {
 	}
 
 	if (getMoviesRequestStatus === RequestStatus.ERROR) {
-		console.log('Treat error case')
+		console.error('Treat error case')
 	}
 
 	return <Grid>{movieItems}</Grid>

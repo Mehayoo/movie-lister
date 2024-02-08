@@ -22,10 +22,12 @@ export const syncFavorites: Middleware<{}, RootState> =
 			favoriteMoviesTotalPages,
 		} = moviesReducer
 
+		const stateFavoriteMovieIdsSet: Set<number> = new Set(favoriteMovieIds)
+
 		if (type === getMoviesFulfilledType) {
 			try {
 				if (
-					!favoriteMovieIds.length ||
+					!stateFavoriteMovieIdsSet.size ||
 					favoriteMoviesPage < favoriteMoviesTotalPages
 				) {
 					const favoriteMoviesData: RequestMoviesResponse =
@@ -38,7 +40,9 @@ export const syncFavorites: Middleware<{}, RootState> =
 					const favoriteIds: number[] = results.map(
 						(movie: Movie) => movie.id
 					)
-					const favoriteIdsSet: Set<number> = new Set(favoriteIds)
+					const requestFavoriteIdsSet: Set<number> = new Set(
+						favoriteIds
+					)
 
 					store.dispatch(
 						setSyncFavoritesParams({
@@ -51,7 +55,9 @@ export const syncFavorites: Middleware<{}, RootState> =
 					const updatedMovieResults: Movie[] = payload.results.map(
 						(movie: Movie) => ({
 							...movie,
-							favorite: favoriteIdsSet.has(movie.id),
+							favorite:
+								stateFavoriteMovieIdsSet.has(movie.id) ||
+								requestFavoriteIdsSet.has(movie.id),
 						})
 					)
 
@@ -60,13 +66,10 @@ export const syncFavorites: Middleware<{}, RootState> =
 						payload: { ...payload, results: updatedMovieResults },
 					})
 				} else {
-					const favoriteIdsSet: Set<number> = new Set(
-						favoriteMovieIds
-					)
 					const updatedMovieResults: Movie[] = payload.results.map(
 						(movie: Movie) => ({
 							...movie,
-							favorite: favoriteIdsSet.has(movie.id),
+							favorite: stateFavoriteMovieIdsSet.has(movie.id),
 						})
 					)
 

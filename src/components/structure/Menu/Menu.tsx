@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import { Link } from 'react-router-dom'
 import { IconX } from '@tabler/icons-react'
-import { Categories } from '../..'
+import { Button, Categories } from '../..'
 import { MenuProps } from './types'
 import cn from '../../../utils/classNames'
 
@@ -18,7 +18,10 @@ const Menu = ({ categories, menuOpen, toggleMenu }: MenuProps) => {
 		<nav className={bem('', { open: menuOpen })}>
 			<header className={bem('title')}>
 				<h2>Menu</h2>
-				<IconX aria-label="Close menu" onClick={toggleMenu} />
+				<Button
+					onClick={toggleMenu}
+					headIcon={<IconX aria-label="Close menu" />}
+				/>
 			</header>
 
 			<div className={bem('body')}>

@@ -32,7 +32,7 @@ export const useMovieState = () => {
 		(state: RootState) => state.moviesReducer.toggleFavoriteRequestStatus
 	)
 
-	const currentCategoryId: number = useAppSelector(
+	const currentCategoryId: number | undefined = useAppSelector(
 		(state: RootState) => state.moviesReducer.currentCategoryId
 	)
 	const categories: GetCategoriesResponse = useAppSelector(
@@ -49,6 +49,25 @@ export const useMovieState = () => {
 		(state: RootState) => state.moviesReducer.categoryMovieIds
 	)
 
+	const searchResults: MovieResult = useAppSelector(
+		(state: RootState) => state.moviesReducer.searchResults
+	)
+	const searchResultIds: number[] = useAppSelector(
+		(state: RootState) => state.moviesReducer.searchResultIds
+	)
+	const searchQuery: string = useAppSelector(
+		(state: RootState) => state.moviesReducer.searchQuery
+	)
+	const getSearchResultsRequestStatus: RequestStatus = useAppSelector(
+		(state: RootState) => state.moviesReducer.getSearchResultsRequestStatus
+	)
+	const pathContext: string = useAppSelector(
+		(state: RootState) => state.moviesReducer.pathContext
+	)
+	const isSearching: boolean = useAppSelector(
+		(state: RootState) => state.moviesReducer.isSearching
+	)
+
 	return {
 		movies,
 		movieIds,
@@ -63,5 +82,11 @@ export const useMovieState = () => {
 		getCategoriesRequestStatus,
 		categoryMovies,
 		categoryMovieIds,
+		searchResults,
+		searchResultIds,
+		searchQuery,
+		getSearchResultsRequestStatus,
+		pathContext,
+		isSearching,
 	}
 }

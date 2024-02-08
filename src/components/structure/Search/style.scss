@@ -1,76 +1,84 @@
 @import '../../../assets/styles/variables.scss';
 
-// #{$Search} {
-// 	display: flex;
-// 	justify-content: center;
-// 	overflow: hidden;
-// 	transition: width 0.3s ease-in-out;
-// 	width: 100%;
-// 	// width: 50%;
-
-// 	@media (max-width: 600px) {
-// 		justify-content: flex-end;
-// 		// width: 0;
-// 	}
-
-// 	// &--open {
-// 	// 	width: 100%;
-// 	// }
-
-// 	&__input {
-// 		float: right;
-// 		height: 3rem;
-// 		width: 0;
-
-// 		&--open {
-// 			width: 100%;
-// 		}
-// 	}
-// }
-
 #{$Search} {
-	float: right;
-	width: 100%;
+	align-items: center;
+	display: flex;
+	justify-content: flex-end;
+	position: relative;
+	width: 50%;
 
-	&--open {
-		animation-name: reducetime;
-		animation-duration: 1s;
+	@media (min-width: 600px) and (max-width: 750px) {
+		width: 40%;
+	}
+
+	@media (max-width: 600px) {
+		width: 100%;
+	}
+
+	&__form {
+		position: relative;
+		width: 100%;
+
+		@media (max-width: 600px) {
+			opacity: 0;
+			transition: ease-in-out all 350ms;
+			width: 0;
+		}
+
+		&--open {
+			opacity: 1;
+			width: 100%;
+		}
 	}
 
 	&__input {
-		height: 3rem;
-	}
-}
-
-@keyframes reducetime {
-	0% {
-		width: 0;
-	}
-	100% {
+		background: transparent;
+		border-radius: 20rem;
+		padding: 0.7rem;
 		width: 100%;
+
+		&:focus {
+			outline: none !important;
+			border: 0.2rem solid $primary-color;
+		}
+
+		@media (max-width: 600px) {
+			padding-left: 3rem;
+		}
+	}
+
+	&__close-search-btn {
+		left: 0.6rem;
+		margin-left: 0.3rem;
+		position: absolute;
+		top: 0.8rem;
+	}
+
+	&__search-btn {
+		position: absolute;
+		right: 1rem;
+
+		@media (max-width: 600px) {
+			right: 0.6rem;
+		}
+
+		&:hover {
+			color: $primary-color;
+
+			@media (max-width: 600px) {
+				color: unset;
+			}
+		}
+	}
+
+	&__toast {
+		background: aquamarine;
+		border-radius: 1.5rem;
+		font-size: 1.5rem;
+		padding: 0.7rem;
+		position: absolute;
+		right: 0;
+		top: 4rem;
+		width: fit-content;
 	}
 }
-
-// @import '../../../assets/styles/variables.scss';
-
-// #{$Search} {
-// 	display: flex;
-// 	justify-content: center;
-
-// 	overflow: hidden;
-// 	transition: width 0.3s ease-in-out;
-// 	width: 0;
-
-// 	@include breakpoint(medium) {
-// 		width: 100%;
-// 	}
-
-// 	&--open {
-// 		width: 100%;
-// 	}
-
-// 	&__input {
-// 		height: 3rem;
-// 		width: 60%;
-// 	}
-// }

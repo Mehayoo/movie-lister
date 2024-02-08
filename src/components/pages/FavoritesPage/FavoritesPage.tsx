@@ -1,15 +1,11 @@
 import { ReactElement, useEffect, useMemo } from 'react'
+import { Grid, MovieItem, NoResultsPage, Skeleton } from '../..'
 import { useAppDispatch } from '../../../redux/store'
-import { getFavorites } from '../../../redux/reducers/movies/actionCreators'
 import { useAuthState } from '../../../redux/reducers/auth/selectors'
+import { getFavorites } from '../../../redux/reducers/movies/actionCreators'
 import { useMovieState } from '../../../redux/reducers/movies/selectors'
-import { Button, Grid, MovieItem, Skeleton } from '../..'
 import useDetectScrolledToBottom from '../../../hooks/useDetectScrolledToBottom'
 import { RequestStatus } from '../../../constants'
-import cn from '../../../utils/classNames'
-
-import './style.scss'
-const bem = cn('favorites-page')
 
 const FavoritesPage = () => {
 	const dispatch = useAppDispatch()
@@ -68,15 +64,12 @@ const FavoritesPage = () => {
 	}
 
 	if (getFavoriteMoviesStatus === RequestStatus.ERROR) {
-		console.log('Treat error case')
+		console.error('Treat error case')
 	}
 
 	if (!favoriteMovieIds.length) {
 		return (
-			<main className={bem('no-results')}>
-				<p>No favorite movies to show. Go back and add some.</p>
-				<Button />
-			</main>
+			<NoResultsPage message="No favorite movies to show. Go back and add some." />
 		)
 	}
 
