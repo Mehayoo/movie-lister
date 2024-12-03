@@ -5,10 +5,10 @@ import './style.scss'
 const bem = cn('skeleton')
 
 const Skeleton = () => {
-	const [width, setWidth] = useState(0)
+	const [width, setWidth] = useState<number>(0)
 
 	const updateWidth = () => {
-		let screenWidth: number = document.documentElement.offsetWidth
+		let screenWidth = document.documentElement.offsetWidth
 
 		const maxWidth = 1200
 		screenWidth = Math.min(screenWidth, maxWidth)

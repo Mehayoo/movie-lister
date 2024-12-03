@@ -2,8 +2,10 @@ import { RootState, useAppSelector } from '../../store'
 import {
 	GetCategoriesResponse,
 	MovieResult,
+	PaginatedMovieResult,
+	PathContext,
 	RequestStatus,
-} from '../../../constants/'
+} from '../../../constants'
 
 export const useMovieState = () => {
 	const movies: MovieResult = useAppSelector(
@@ -19,7 +21,13 @@ export const useMovieState = () => {
 		(state: RootState) => state.moviesReducer.hasFetchedMovies
 	)
 
-	const favoriteMovies: MovieResult = useAppSelector(
+	const favoriteMoviesPage: number = useAppSelector(
+		(state: RootState) => state.moviesReducer.favoriteMoviesPage
+	)
+	const favoriteMoviesTotalPages: number = useAppSelector(
+		(state: RootState) => state.moviesReducer.favoriteMoviesTotalPages
+	)
+	const favoriteMovies: PaginatedMovieResult = useAppSelector(
 		(state: RootState) => state.moviesReducer.favoriteMovies
 	)
 	const favoriteMovieIds: number[] = useAppSelector(
@@ -61,7 +69,7 @@ export const useMovieState = () => {
 	const getSearchResultsRequestStatus: RequestStatus = useAppSelector(
 		(state: RootState) => state.moviesReducer.getSearchResultsRequestStatus
 	)
-	const pathContext: string = useAppSelector(
+	const pathContext: PathContext = useAppSelector(
 		(state: RootState) => state.moviesReducer.pathContext
 	)
 	const isSearching: boolean = useAppSelector(
@@ -73,6 +81,8 @@ export const useMovieState = () => {
 		movieIds,
 		getMoviesRequestStatus,
 		hasFetchedMovies,
+		favoriteMoviesPage,
+		favoriteMoviesTotalPages,
 		favoriteMovies,
 		favoriteMovieIds,
 		getFavoriteMoviesStatus,

@@ -14,7 +14,7 @@ export const handleError = <T>(params: {
 			? extractErrorMessage(axiosError.response?.data)
 			: axiosError.response?.statusText
 
-		throw new Error(message || defaultMsg)
+		throw new Error(message ?? defaultMsg)
 	} else {
 		throw new Error('An unexpected error occurred')
 	}

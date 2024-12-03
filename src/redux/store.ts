@@ -1,7 +1,8 @@
-import { configureStore } from '@reduxjs/toolkit'
 import { TypedUseSelectorHook, useDispatch, useSelector } from 'react-redux'
-import { syncFavorites } from './middleware/syncFavorites.middleware'
+import { configureStore } from '@reduxjs/toolkit'
+
 import rootReducer from './reducers'
+import { syncFavorites } from './middleware/syncFavorites.middleware'
 
 const store = configureStore({
 	reducer: rootReducer,

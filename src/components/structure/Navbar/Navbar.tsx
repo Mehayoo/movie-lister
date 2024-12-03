@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react'
 import { Link, useLocation } from 'react-router-dom'
 import { IconMenu2 } from '@tabler/icons-react'
-import { Button, Categories, Menu, Search } from '../../'
+import { Button, Categories, Menu, Search } from '../..'
 import { useAppDispatch } from '../../../redux/store'
 import { getCategories } from '../../../redux/reducers/movies/actionCreators'
 import { useMovieState } from '../../../redux/reducers/movies/selectors'

@@ -7,6 +7,7 @@ const bem = cn('button')
 const Button = ({
 	children,
 	className,
+	disabled = false,
 	headIcon,
 	label,
 	onClick,
@@ -15,7 +16,12 @@ const Button = ({
 	const classNames = [bem(''), className].join(' ').trim()
 
 	return (
-		<button className={classNames} onClick={onClick} type="button">
+		<button
+			className={classNames}
+			disabled={disabled}
+			onClick={onClick}
+			type="button"
+		>
 			{headIcon && <i className={bem('icon-container')}>{headIcon}</i>}
 
 			{label || children}

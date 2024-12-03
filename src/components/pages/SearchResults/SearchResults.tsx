@@ -1,10 +1,10 @@
 import { ReactElement, useEffect, useMemo } from 'react'
 import { useLocation } from 'react-router-dom'
-import { Grid, MovieItem, NoResultsPage, Skeleton } from '../..'
+import { Grid, MovieItem, NoResultsPage, SkeletonGrid } from '../..'
 import { useAppDispatch } from '../../../redux/store'
 import { useAuthState } from '../../../redux/reducers/auth/selectors'
 import { searchMovies } from '../../../redux/reducers/movies/actionCreators'
-import { resetSearch } from '../../../redux/reducers/movies/slice'
+import { resetSearchState } from '../../../redux/reducers/movies/slice'
 import { useMovieState } from '../../../redux/reducers/movies/selectors'
 import useDetectScrolledToBottom from '../../../hooks/useDetectScrolledToBottom'
 import { RequestStatus } from '../../../constants'
@@ -33,7 +33,7 @@ const SearchResults = () => {
 
 	useEffect(() => {
 		return () => {
-			dispatch(resetSearch())
+			dispatch(resetSearchState())
 		}
 	}, [location, dispatch])
 
@@ -58,14 +58,6 @@ const SearchResults = () => {
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [isBottom])
 
-	const loadingSkeletons: JSX.Element[] = useMemo(
-		() =>
-			Array.from({ length: 12 }).map((_, index) => (
-				<Skeleton key={index} />
-			)),
-		[]
-	)
-
 	const movieItems: JSX.Element[] = useMemo(() => {
 		const items: ReactElement[] = []
 		searchResultIds.forEach((movieId: number) => {
@@ -78,7 +70,7 @@ const SearchResults = () => {
 		getSearchResultsRequestStatus === RequestStatus.PENDING ||
 		getSearchResultsRequestStatus === RequestStatus.LOADING
 	) {
-		return <Grid>{loadingSkeletons}</Grid>
+		return <SkeletonGrid />
 	}
 
 	if (getSearchResultsRequestStatus === RequestStatus.ERROR) {

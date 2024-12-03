@@ -1,5 +1,5 @@
 import { ReactElement, useEffect, useMemo } from 'react'
-import { Grid, MovieItem, Skeleton } from '../..'
+import { Grid, MovieItem, SkeletonGrid } from '../..'
 import { useAppDispatch } from '../../../redux/store'
 import { useAuthState } from '../../../redux/reducers/auth/selectors'
 import { getMovies } from '../../../redux/reducers/movies/actionCreators'
@@ -40,14 +40,6 @@ const MoviesPage = () => {
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [isBottom])
 
-	const loadingSkeletons: JSX.Element[] = useMemo(
-		() =>
-			Array.from({ length: 12 }).map((_, index) => (
-				<Skeleton key={index} />
-			)),
-		[]
-	)
-
 	const movieItems: JSX.Element[] = useMemo(() => {
 		const items: ReactElement[] = []
 		movieIds.forEach((movieId: number) => {
@@ -60,7 +52,7 @@ const MoviesPage = () => {
 		getMoviesRequestStatus === RequestStatus.PENDING ||
 		getMoviesRequestStatus === RequestStatus.LOADING
 	) {
-		return <Grid>{loadingSkeletons}</Grid>
+		return <SkeletonGrid />
 	}
 
 	if (getMoviesRequestStatus === RequestStatus.ERROR) {

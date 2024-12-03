@@ -66,7 +66,7 @@
 import React from 'react'
 import { Link } from 'react-router-dom'
 import { IconHeartPlus } from '@tabler/icons-react'
-import { Button } from '../../'
+import { Button } from '../..'
 import { RootState, useAppDispatch, useAppSelector } from '../../../redux/store'
 import { toggleFavorite } from '../../../redux/reducers/movies/actionCreators'
 import useLazyLoad from '../../../hooks/useLazyLoad'
@@ -138,4 +138,5 @@ const MovieItem = ({
 	)
 }
 
+// All props that are not primitive values have to be memoized for React.memo to work
 export default React.memo(MovieItem)

@@ -38,8 +38,8 @@
 		width: 100%;
 
 		&:focus {
+			border: 0.2rem solid $color-primary;
 			outline: none !important;
-			border: 0.2rem solid $primary-color;
 		}
 
 		@media (max-width: 600px) {
@@ -63,7 +63,7 @@
 		}
 
 		&:hover {
-			color: $primary-color;
+			color: $color-primary;
 
 			@media (max-width: 600px) {
 				color: unset;

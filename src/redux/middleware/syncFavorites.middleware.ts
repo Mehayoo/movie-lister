@@ -35,21 +35,24 @@ export const syncFavorites: Middleware<{}, RootState> =
 							page: favoriteMoviesPage + 1,
 						})
 
-					const { results, page, total_pages } = favoriteMoviesData
+					console.log(
+						'@@favoriteMoviesPageeeee: ',
+						favoriteMoviesPage
+					)
+					const { results } = favoriteMoviesData
 
 					const favoriteIds: number[] = results.map(
 						(movie: Movie) => movie.id
 					)
-					const requestFavoriteIdsSet: Set<number> = new Set(
-						favoriteIds
-					)
-
 					store.dispatch(
 						setSyncFavoritesParams({
+							...favoriteMoviesData,
 							favoriteMovieIds: favoriteIds,
-							favoriteMoviesPage: page,
-							favoriteMoviesTotalPages: total_pages,
 						})
+					)
+
+					const requestFavoriteIdsSet: Set<number> = new Set(
+						favoriteIds
 					)
 
 					const updatedMovieResults: Movie[] = payload.results.map(

@@ -14,7 +14,7 @@ export const pathContextMapping: PathContextMappingType = {
 
 export const getContextFromPath = (pathname: string): PathContext => {
 	let context: string = ContextEnum.ALL
-	let dynamicValue: string | null = null
+	let dynamicValue: string | undefined = undefined
 
 	for (const [ctx, pathPattern] of Object.entries(pathContextMapping)) {
 		const regex: RegExp = new RegExp(`^${pathPattern}$`)

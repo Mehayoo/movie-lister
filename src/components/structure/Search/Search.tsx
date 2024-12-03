@@ -1,27 +1,23 @@
-import { useState, useEffect, useMemo } from 'react'
-import { useLocation, useNavigate } from 'react-router-dom'
+import { useState, useEffect } from 'react'
+import { useNavigate } from 'react-router-dom'
 import { IconSearch, IconX } from '@tabler/icons-react'
-import { Button } from '../../'
+import { Button } from '../..'
 import { useAppDispatch } from '../../../redux/store'
-import {
-	setPathContext,
-	setSearchQuery,
-} from '../../../redux/reducers/movies/slice'
+import { setSearchQuery } from '../../../redux/reducers/movies/slice'
 import { useMovieState } from '../../../redux/reducers/movies/selectors'
-import { getContextFromPath } from '../../../utils/getContextFromPath'
 import { pathContextActionMapping } from '../../../utils/pathContextActionMapping'
 import { createSearchUrl } from '../../../utils/createSearchUrl'
 import { SearchProps } from './types'
-import { ContextEnum } from '../../../constants'
 import cn from '../../../utils/classNames'
 
 import './style.scss'
+import { useSearchContext } from '../../../hooks/useSearchContext'
 const bem = cn('search')
 
 const Search = ({ className }: SearchProps) => {
-	const location = useLocation()
 	const navigate = useNavigate()
 	const dispatch = useAppDispatch()
+	const { context, configureSearchContext } = useSearchContext()
 
 	const { searchQuery, currentCategoryId, pathContext } = useMovieState()
 
@@ -33,16 +29,6 @@ const Search = ({ className }: SearchProps) => {
 	const [searchTerm, setSearchTerm] = useState<string>(searchQuery)
 
 	const classNames: string = [bem(''), className].join(' ').trim()
-	const { context, dynamicValue } = useMemo(
-		() => getContextFromPath(location.pathname),
-		[location]
-	)
-
-	const setContext = (): void => {
-		if (context !== ContextEnum.SEARCH) {
-			dispatch(setPathContext(dynamicValue || context))
-		}
-	}
 
 	useEffect(() => {
 		const handleResize = (): void => {
@@ -57,11 +43,12 @@ const Search = ({ className }: SearchProps) => {
 	}, [])
 
 	useEffect(() => {
-		setContext()
+		configureSearchContext()
 
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [dispatch, context])
 
+	// Synchronizing searchTerm with the global searchQuery state
 	useEffect(() => {
 		setSearchTerm(searchQuery || '')
 	}, [searchQuery])
@@ -70,17 +57,24 @@ const Search = ({ className }: SearchProps) => {
 
 	const performSearch = (): void => {
 		const searchUrl: string = createSearchUrl(searchTerm, context)
-		const currentPathAction = pathContextActionMapping(context, {
-			query: searchTerm,
-			categoryId: currentCategoryId,
-		})
+
+		const currentPathAction = pathContextActionMapping(
+			pathContext.context,
+			{
+				query: searchTerm,
+				categoryId: currentCategoryId,
+			}
+		)
 
 		if (currentPathAction) {
 			dispatch(setSearchQuery(searchTerm))
 			dispatch(currentPathAction)
 			navigate(searchUrl)
 		} else {
-			console.error('No valid action to dispatch for context:', context)
+			console.error(
+				'No valid action to dispatch for context:',
+				pathContext.context
+			)
 		}
 	}
 
@@ -126,7 +120,9 @@ const Search = ({ className }: SearchProps) => {
 
 			{showNotification && (
 				<div className={bem('toast')}>
-					{`Searching in ${dynamicValue || pathContext}`}
+					{`Searching in ${
+						pathContext.dynamicValue || pathContext.context
+					}`}
 				</div>
 			)}
 

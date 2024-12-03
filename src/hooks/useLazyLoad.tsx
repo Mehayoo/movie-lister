@@ -1,6 +1,9 @@
 import { useEffect, useState, useRef } from 'react'
 
-const useLazyLoad = () => {
+const useLazyLoad = (): {
+	loaded: boolean
+	ref: React.RefObject<HTMLDivElement>
+} => {
 	const [loaded, setLoaded] = useState<boolean>(false)
 	const ref = useRef<HTMLDivElement>(null)
 

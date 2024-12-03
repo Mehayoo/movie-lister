@@ -19,16 +19,12 @@ export const pathContextActionMapping = (
 		case ContextEnum.ALL:
 			return searchMovies({ query })
 		case ContextEnum.CATEGORY:
-			if (categoryId) {
-				return searchMovies({ query, categoryId })
-			}
+			return searchMovies({ query, categoryId })
 
-			// Treat error case
-			break
+		// TO-DO: Treat error case if there's any need for this
+
 		case ContextEnum.FAVORITES:
-			break
-		case ContextEnum.SEARCH:
-			// return pathContextActionMapping(context, {})
+			// TO-DO: Treat error case if there's any need for this
 			break
 		default:
 			console.error(

@@ -4,6 +4,7 @@ import {
 	Draft,
 	PayloadAction,
 } from '@reduxjs/toolkit'
+
 import {
 	getCategories,
 	getFavorites,
@@ -18,6 +19,8 @@ import {
 	Movie,
 	MovieLookup,
 	MovieResult,
+	PaginatedMovieResult,
+	PathContext,
 	RequestMoviesResponse,
 	RequestStatus,
 	SyncFavoritesParams,
@@ -33,7 +36,7 @@ export interface MoviesState {
 
 	favoriteMoviesPage: number
 	favoriteMoviesTotalPages: number
-	favoriteMovies: MovieResult
+	favoriteMovies: PaginatedMovieResult
 	favoriteMovieIds: number[]
 	getFavoriteMoviesStatus: RequestStatus
 	toggleFavoriteRequestStatus: RequestStatus
@@ -49,7 +52,7 @@ export interface MoviesState {
 	searchResultIds: number[]
 	searchQuery: string
 	getSearchResultsRequestStatus: RequestStatus
-	pathContext: string
+	pathContext: PathContext
 	isSearching: boolean
 }
 
@@ -70,6 +73,7 @@ const initialState: MoviesState = {
 	favoriteMovies: {
 		results: {} as MovieLookup,
 		page: 1,
+		pages: {},
 		total_pages: 0,
 		total_results: 0,
 	},
@@ -98,7 +102,10 @@ const initialState: MoviesState = {
 	searchResultIds: [],
 	searchQuery: '',
 	getSearchResultsRequestStatus: RequestStatus.PENDING,
-	pathContext: ContextEnum.ALL,
+	pathContext: {
+		context: ContextEnum.ALL,
+		dynamicValue: undefined,
+	},
 	isSearching: false,
 }
 
@@ -111,18 +118,30 @@ const slice = createSlice({
 			action: PayloadAction<SyncFavoritesParams>
 		): void => {
 			const {
+				results,
+				page,
+				total_pages,
+				total_results,
 				favoriteMovieIds,
-				favoriteMoviesPage,
-				favoriteMoviesTotalPages,
 			} = action.payload
+
+			console.log('@@page: ', page)
+			state.favoriteMoviesPage = page
+			state.favoriteMoviesTotalPages = total_pages
+
+			state.favoriteMovies.pages[page] = favoriteMovieIds || []
+			results.forEach((movie: Movie) => {
+				state.favoriteMovies.results[movie.id] = movie
+				state.favoriteMovies.results[movie.id].favorite = true
+			})
+			state.favoriteMovies.total_pages = total_pages
+			state.favoriteMovies.total_results = total_results
 
 			const favoriteMovieIdsSet: Set<number> = new Set([
 				...state.favoriteMovieIds,
 				...favoriteMovieIds,
 			])
 			state.favoriteMovieIds = Array.from(favoriteMovieIdsSet)
-			state.favoriteMoviesPage = favoriteMoviesPage
-			state.favoriteMoviesTotalPages = favoriteMoviesTotalPages
 		},
 		setCurrentCategoryId: (
 			state: Draft<MoviesState>,
@@ -136,7 +155,7 @@ const slice = createSlice({
 		): void => {
 			state.searchQuery = action.payload
 		},
-		resetSearch: (state: Draft<MoviesState>): void => {
+		resetSearchState: (state: Draft<MoviesState>): void => {
 			state.searchResults = {
 				results: {},
 				page: 1,
@@ -144,13 +163,12 @@ const slice = createSlice({
 				total_results: 0,
 			}
 			state.searchResultIds = []
-			state.searchQuery = ''
 			state.getSearchResultsRequestStatus = RequestStatus.PENDING
 			state.isSearching = false
 		},
 		setPathContext: (
 			state: Draft<MoviesState>,
-			action: PayloadAction<string>
+			action: PayloadAction<PathContext>
 		): void => {
 			state.pathContext = action.payload
 		},
@@ -218,7 +236,7 @@ const slice = createSlice({
 			.addCase(
 				getFavorites.pending,
 				(state: Draft<MoviesState>): void => {
-					state.getFavoriteMoviesStatus = RequestStatus.PENDING
+					state.getFavoriteMoviesStatus = RequestStatus.LOADING
 				}
 			)
 			.addCase(
@@ -238,6 +256,9 @@ const slice = createSlice({
 
 					state.getFavoriteMoviesStatus = RequestStatus.SUCCESS
 
+					const favoriteMovieIdsPageSet: Set<number> = new Set(
+						state.favoriteMovies.pages[page]
+					)
 					const favoriteMovieIdsSet: Set<number> = new Set(
 						state.favoriteMovieIds
 					)
@@ -245,7 +266,13 @@ const slice = createSlice({
 						favoriteMovieIdsSet.add(movie.id)
 						state.favoriteMovies.results[movie.id] = movie
 						state.favoriteMovies.results[movie.id].favorite = true
+						state.favoriteMovies.results[movie.id].page = page
+						favoriteMovieIdsPageSet.add(movie.id)
 					})
+					state.favoriteMovies.pages[page] = Array.from(
+						favoriteMovieIdsPageSet
+					)
+
 					state.favoriteMovieIds = Array.from(favoriteMovieIdsSet)
 
 					state.favoriteMovies.page = page
@@ -257,7 +284,7 @@ const slice = createSlice({
 			.addCase(
 				toggleFavorite.pending,
 				(state: Draft<MoviesState>): void => {
-					state.toggleFavoriteRequestStatus = RequestStatus.PENDING
+					state.toggleFavoriteRequestStatus = RequestStatus.LOADING
 				}
 			)
 			.addCase(
@@ -279,6 +306,38 @@ const slice = createSlice({
 					state.toggleFavoriteRequestStatus = RequestStatus.SUCCESS
 					const { movieId, favorite } = action.meta.arg
 
+					const favoriteMovieIdsSet = new Set(state.favoriteMovieIds)
+
+					if (favorite) {
+						favoriteMovieIdsSet.add(movieId)
+						if (!state.favoriteMovies.results[movieId]) {
+							state.favoriteMovies.results[movieId] =
+								state.movies.results[movieId]
+
+							// const lastPageOfFavoriteMovies: number =
+							// 	Object.keys(state.favoriteMovies.pages).length -
+							// 	1
+							// state.favoriteMovies.pages[
+							// 	lastPageOfFavoriteMovies
+							// ].push(movieId)
+						}
+					} else {
+						favoriteMovieIdsSet.delete(movieId)
+
+						const pageOfFavoriteMovie: number | undefined =
+							state.favoriteMovies.results[movieId].page
+						if (pageOfFavoriteMovie) {
+							state.favoriteMovies.pages[pageOfFavoriteMovie] =
+								state.favoriteMovies.pages[
+									pageOfFavoriteMovie
+								].filter((id: number) => id !== movieId)
+						}
+
+						delete state.favoriteMovies.results[movieId]
+					}
+
+					state.favoriteMovieIds = Array.from(favoriteMovieIdsSet)
+
 					if (state.movies.results[movieId]) {
 						state.movies.results[movieId].favorite = favorite
 					}
@@ -292,28 +351,13 @@ const slice = createSlice({
 						state.categoryMovies.results[movieId].favorite =
 							favorite
 					}
-
-					const favoriteMovieIdsSet = new Set(state.favoriteMovieIds)
-
-					if (favorite) {
-						favoriteMovieIdsSet.add(movieId)
-						if (!state.favoriteMovies.results[movieId]) {
-							state.favoriteMovies.results[movieId] =
-								state.movies.results[movieId]
-						}
-					} else {
-						favoriteMovieIdsSet.delete(movieId)
-						delete state.favoriteMovies.results[movieId]
-					}
-
-					state.favoriteMovieIds = Array.from(favoriteMovieIdsSet)
 				}
 			)
 
 			.addCase(
 				getCategories.pending,
 				(state: Draft<MoviesState>): void => {
-					state.getCategoriesRequestStatus = RequestStatus.PENDING
+					state.getCategoriesRequestStatus = RequestStatus.LOADING
 				}
 			)
 			.addCase(
@@ -336,7 +380,7 @@ const slice = createSlice({
 			.addCase(
 				searchMovies.pending,
 				(state: Draft<MoviesState>): void => {
-					state.getSearchResultsRequestStatus = RequestStatus.PENDING
+					state.getSearchResultsRequestStatus = RequestStatus.LOADING
 				}
 			)
 			.addCase(
@@ -377,7 +421,7 @@ export const {
 	setSyncFavoritesParams,
 	setCurrentCategoryId,
 	setSearchQuery,
-	resetSearch,
+	resetSearchState,
 	setPathContext,
 } = slice.actions
 export default slice.reducer

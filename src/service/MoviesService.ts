@@ -137,6 +137,7 @@ class MoviesService {
 					},
 				}
 			)
+
 			return response.data
 		} catch (error) {
 			return handleError({

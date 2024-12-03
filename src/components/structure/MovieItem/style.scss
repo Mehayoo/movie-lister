@@ -63,13 +63,13 @@
 		justify-content: center;
 
 		&:hover {
-			color: $primary-color;
-			fill: $primary-color;
+			color: $color-primary;
+			fill: $color-primary;
 		}
 
 		&--filled {
-			color: $primary-color;
-			fill: $primary-color;
+			color: $color-primary;
+			fill: $color-primary;
 
 			&:hover {
 				color: none;

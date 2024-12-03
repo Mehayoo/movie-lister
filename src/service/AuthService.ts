@@ -46,7 +46,7 @@ class AuthService {
 		window.location.href = redirectUrl
 	}
 
-	async createSessionId(approvedToken: string): Promise<string> {
+	public async createSessionId(approvedToken: string): Promise<string> {
 		try {
 			const response = await axios.post<SessionResponse>(
 				`${process.env.REACT_APP_API_BASE_URL}/authentication/session/new`,

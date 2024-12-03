@@ -2,7 +2,7 @@ import { AsyncThunk, createAsyncThunk } from '@reduxjs/toolkit'
 import { AsyncThunkConfig } from '@reduxjs/toolkit/dist/createAsyncThunk'
 
 import MoviesService from '../../../../service/MoviesService'
-import { GetMoviesParams, RequestMoviesResponse } from '../../../../constants/'
+import { GetMoviesParams, RequestMoviesResponse } from '../../../../constants'
 import { SLICE_NAME } from '../constants'
 
 const getMovies: AsyncThunk<
@@ -21,5 +21,6 @@ const getMovies: AsyncThunk<
 )
 
 const getMoviesFulfilledType: string = getMovies.fulfilled.type
+console.log('@@getMoviesFulfilledType: ', getMoviesFulfilledType)
 
 export { getMovies, getMoviesFulfilledType }

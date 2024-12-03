@@ -1,6 +1,8 @@
 import { RefObject, useCallback, useEffect, useState } from 'react'
 
-const useDetectScrolledToBottom = (node?: RefObject<HTMLElement>) => {
+const useDetectScrolledToBottom = (
+	node?: RefObject<HTMLElement>
+): { isBottom: boolean } => {
 	const [isBottom, setIsBottom] = useState<boolean>(false)
 
 	const handleScroll: () => void = useCallback(() => {

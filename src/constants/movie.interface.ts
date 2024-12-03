@@ -14,4 +14,5 @@ export interface Movie {
 	vote_average: number
 	vote_count: number
 	favorite: boolean
+	page?: number
 }
